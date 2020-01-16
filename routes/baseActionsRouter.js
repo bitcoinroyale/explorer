@@ -1230,7 +1230,7 @@ router.get("/pool-share", function(req, res, next) {
 				coreApi.getTxCountStats(targetBlocksPerDay / 4, -144 * 30, "latest").then(function(result4) {
 					res.locals.txStatsMonth = result4.txCountStats;
 
-					res.render("tx-stats");
+					res.render("pool-share");
 
 					next();
 				});
