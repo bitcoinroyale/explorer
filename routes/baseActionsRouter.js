@@ -1204,4 +1204,39 @@ router.get("/fun", function(req, res, next) {
 	next();
 });
 
+router.get("/pool-share", function(req, res, next) {
+	var dataPoints = 100;
+
+	if (req.query.dataPoints) {
+		dataPoints = req.query.dataPoints;
+	}
+
+	if (dataPoints > 250) {
+		dataPoints = 250;
+	}
+
+	var targetBlocksPerDay = 24 * 60 * 60 / global.coinConfig.targetBlockTimeSeconds;
+
+	coreApi.getTxCountStats(dataPoints, 0, "latest").then(function(result) {
+		res.locals.getblockchaininfo = result.getblockchaininfo;
+		res.locals.txStats = result.txCountStats;
+
+		coreApi.getTxCountStats(targetBlocksPerDay / 4, -144, "latest").then(function(result2) {
+			res.locals.txStatsDay = result2.txCountStats;
+
+			coreApi.getTxCountStats(targetBlocksPerDay / 4, -144 * 7, "latest").then(function(result3) {
+				res.locals.txStatsWeek = result3.txCountStats;
+
+				coreApi.getTxCountStats(targetBlocksPerDay / 4, -144 * 30, "latest").then(function(result4) {
+					res.locals.txStatsMonth = result4.txCountStats;
+
+					res.render("tx-stats");
+
+					next();
+				});
+			});
+		});
+	});
+});
+
 module.exports = router;

@@ -23,7 +23,7 @@ block content
 						script txCountDataDay.push({x:#{item.x}, y:#{item.y}});
 
 					- var graphData = {id:"graphDay", dataVar:"txCountDataDay", labels:txStatsDay.txLabels, title:"Transactions, 24hr", xaxisTitle:"Block", xaxisStep:5, yaxisTitle:"Tx Count"};
-					include ./includes/line-graph.pug
+					include ./includes/pie-graph.pug
 
 				div(class="col-lg-6")
 					script var txCountDataWeek = [];
@@ -31,7 +31,7 @@ block content
 						script txCountDataWeek.push({x:#{item.x}, y:#{item.y}});
 
 					- var graphData = {id:"graphWeek", dataVar:"txCountDataWeek", labels:txStatsWeek.txLabels, title:"Transactions, 7day", xaxisTitle:"Block", xaxisStep:100, yaxisTitle:"Tx Count"};
-					include ./includes/line-graph.pug
+					include ./includes/pie-graph.pug
 
 				div(class="col-lg-6")
 					script var txCountDataMonth = [];
