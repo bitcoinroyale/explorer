@@ -5,7 +5,7 @@ var url = require('url');
 var coins = require("./coins.js");
 var credentials = require("./credentials.js");
 
-var currentCoin = process.env.BTCEXP_COIN || "BTC"; // BTC is the same as BTCR
+var currentCoin = process.env.BTCEXP_COIN || "BTC"; // BTC is the same as BTCV
 
 var rpcCred = credentials.rpc;
 
@@ -156,8 +156,13 @@ module.exports = {
 		{name:"Mempool Summary", url:"/mempool-summary", desc:"Detailed summary of the current mempool for this node.", fontawesome:"fas fa-clipboard-list"},
 		{name:"Unconfirmed Transactions", url:"/unconfirmed-tx", desc:"Browse unconfirmed/pending transactions.", fontawesome:"fas fa-unlock-alt"},
 
+<<<<<<< HEAD
 		{name:"RPC Browser", url:"/rpc-browser", desc:"Browse the RPC functionality of this node. See docs and execute commands.", fontawesome:"fas fa-book"},
+		{name:"Hashrate distribution", url:"/mining-pools", desc:"Estimated hashrate of mining pools.", fontawesome:"fas fa-chart-pie"}
+=======
+		{name:"Pool share chart", url:"/pool-share", desc:"The hashpower of top mining pools.", fontawesome:"fas fa-book"},
 		{name:"RPC Terminal", url:"/rpc-terminal", desc:"Directly execute RPCs against this node.", fontawesome:"fas fa-terminal"}
+>>>>>>> dev
 	],
 
 	donations:{

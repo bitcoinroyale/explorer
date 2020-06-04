@@ -4,17 +4,17 @@ Decimal8 = Decimal.clone({ precision:8, rounding:8 });
 var currencyUnits = [
 	{
 		type:"native",
-		name:"BTCR",
+		name:"BTCV",
 		multiplier:1,
 		default:true,
-		values:["", "btcr", "BTCR"],
+		values:["", "btcv", "BTCV"],
 		decimalPlaces:8
 	},
 	{
 		type:"native",
-		name:"mBTCR",
+		name:"mBTCV",
 		multiplier:1000,
-		values:["mbtcr"],
+		values:["mbtcv"],
 		decimalPlaces:5
 	},
 	{
@@ -50,14 +50,14 @@ var currencyUnits = [
 ];
 
 module.exports = {
-	name:"Bitcoin Royale",
-	ticker:"BTCR",
+	name:"Bitcoin Vault",
+	ticker:"BTCV",
 	logoUrl:"/img/logo/btc.svg",
-	siteTitle:"Bitcoin Royale Explorer",
-	siteDescriptionHtml:"<b>BTCR Explorer</b> is <a href='https://github.com/bitcoinroyale/explorer). If you run your own [Bitcoin Royale Full Node](https://bitcoin.org/en/full-node), **BTCR Explorer** can easily run alongside it, communicating via RPC calls. See the project [ReadMe](https://github.com/bitcoinroyale/explorer) for a list of features and instructions for running.",
+	siteTitle:"Bitcoin Vault Explorer",
+	siteDescriptionHtml:"<b>BTCV Explorer</b> is <a href='https://github.com/bitcoinvault/explorer). If you run your own [Bitcoin Vault Full Node](https://bitcoin.org/en/full-node), **BTCV Explorer** can easily run alongside it, communicating via RPC calls. See the project [ReadMe](https://github.com/bitcoinvault/explorer) for a list of features and instructions for running.",
 	nodeTitle:"Bitcoin Full Node",
 	nodeUrl:"https://bitcoin.org/en/full-node",
-	demoSiteUrl: "http://explorer.bitcoinroyale.org",
+	demoSiteUrl: "http://explorer.bitcoinvault.global",
 	miningPoolsConfigUrls:[
 		"https://raw.githubusercontent.com/btccom/Blockchain-Known-Pools/master/pools.json",
 		"https://raw.githubusercontent.com/blockchain/Blockchain-Known-Pools/master/pools.json"
@@ -65,7 +65,7 @@ module.exports = {
 	maxBlockWeight: 4000000,
 	targetBlockTimeSeconds: 600,
 	currencyUnits:currencyUnits,
-	currencyUnitsByName:{"BTCR":currencyUnits[0], "mBTCR":currencyUnits[1], "bits":currencyUnits[2], "sat":currencyUnits[3]},
+	currencyUnitsByName:{"BTCV":currencyUnits[0], "mBTCV":currencyUnits[1], "bits":currencyUnits[2], "sat":currencyUnits[3]},
 	baseCurrencyUnit:currencyUnits[3],
 	defaultCurrencyUnit:currencyUnits[0],
 	feeSatoshiPerByteBucketMaxima: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 75, 100, 150],
@@ -226,25 +226,23 @@ module.exports = {
 			alertBodyHtml: "This is one of 2 'duplicate coinbase' transactions. An early bitcoin bug (fixed by <a href='https://github.com/bitcoin/bips/blob/master/bip-0030.mediawiki'>BIP30</a>) allowed identical coinbase transactions - a newer duplicate would overwrite older copies. This transaction was the coinbase transaction for <a href='/block-height/91812'>Block #91,812</a> and, ~3 hours later, <a href='/block-height/91842'>Block #91,842</a>. The 50 BTC claimed as the coinbase for block 91,812 were also overwritten and lost."
 		}
 	],
-	exchangeRateData:{
-		jsonUrl:"https://api.coindesk.com/v1/bpi/currentprice.json",
+	exchangeRateDataUSD:{
+		jsonUrl:"https://api.liquid.com/products/618",
 		responseBodySelectorFunction:function(responseBody) {
 			//console.log("Exchange Rate Response: " + JSON.stringify(responseBody));
-
-			var exchangedCurrencies = ["USD", "GBP", "EUR"];
-
-			if (responseBody.bpi) {
-				var exchangeRates = {};
-
-				for (var i = 0; i < exchangedCurrencies.length; i++) {
-					if (responseBody.bpi[exchangedCurrencies[i]]) {
-						exchangeRates[exchangedCurrencies[i].toLowerCase()] = responseBody.bpi[exchangedCurrencies[i]].rate_float;
-					}
-				}
-
-				return exchangeRates;
+			if (responseBody.last_traded_price) {
+				return responseBody.last_traded_price;
 			}
-			
+			return null;
+		}
+	},
+	exchangeRateDataBTC:{
+		jsonUrl:"https://api.liquid.com/products/619",
+		responseBodySelectorFunction:function(responseBody) {
+			//console.log("Exchange Rate Response: " + JSON.stringify(responseBody));
+			if (responseBody.last_traded_price) {
+				return responseBody.last_traded_price;
+			}
 			return null;
 		}
 	},

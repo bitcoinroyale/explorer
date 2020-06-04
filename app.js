@@ -7,7 +7,7 @@ var path = require('path');
 var dotenv = require("dotenv");
 var fs = require('fs');
 
-var configPaths = [ path.join(os.homedir(), '.config', 'btcr-rpc-explorer.env'), path.join(process.cwd(), '.env') ];
+var configPaths = [ path.join(os.homedir(), '.config', 'btcv-rpc-explorer.env'), path.join(process.cwd(), '.env') ];
 configPaths.filter(fs.existsSync).forEach(path => {
 	console.log('Loading env file:', path);
 	dotenv.config({ path });
@@ -69,8 +69,8 @@ if (process.env.BTCEXP_BASIC_AUTH_PASSWORD) {
 }
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-//app.use(logger('dev'));
+app.use(favicon(__dirname + '/public/favicon.png'));
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -118,7 +118,7 @@ function loadMiningPoolConfigs() {
 
 function getSourcecodeProjectMetadata() {
 	var options = {
-		url: "https://api.github.com/repos/bitcoinroyale/explorer",
+		url: "https://api.github.com/repos/bitcoinvault/explorer",
 		headers: {
 			'User-Agent': 'request'
 		}
@@ -241,12 +241,32 @@ app.runOnStartup = function() {
 		setInterval(getSourcecodeProjectMetadata, 3600000);
 	}
 
-	if (global.exchangeRates == null) {
+	if (!global.exchangeRates) {
 		utils.refreshExchangeRates();
+	}
+
+	if (!global.totalCoinSupply) {
+		utils.refreshCoinSupply();
+	}
+
+	if (!global.totalWalletsNumber) {
+		utils.refreshWalletsNumber();
+	}
+
+	if (!global.txAvgVolume24h) {
+		utils.refreshTxVolume();
+	}
+
+	if (!global.miningPools) {
+		utils.refreshMiningPoolsData();
 	}
 
 	// refresh exchange rate periodically
 	setInterval(utils.refreshExchangeRates, 1800000);
+	setInterval(utils.refreshCoinSupply, 60000);
+	setInterval(utils.refreshWalletsNumber, 60000);
+	setInterval(utils.refreshTxVolume, 60000);
+	setInterval(utils.refreshMiningPoolsData, 60000);
 
 	utils.logMemoryUsage();
 	setInterval(utils.logMemoryUsage, 5000);
